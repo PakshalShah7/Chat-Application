@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if rooms %}
+<div class="card">
+    <div class="row">
+        <div class="col-md-12 cart">
+            <div class="title">
+                <div class="row">
+                    <div class="col"><h3>CHATROOM</h3></div>
+                    <div class="col">
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal"><i class="fa fa-plus fa-lg"></i> Add Room
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% for room in rooms %}
+            <div class="row border-bottom">
+                <div class="row main align-items-center">
+                    <div class="col">
+                        <h5 class="text-secondary">{{ room.name }}</h5>
+                    </div>
+                    <div class="col">
+                        <a class="btn btn-outline-primary" href="{% url 'chat:room_detail' room.id %}">
+                            Chat
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<br>
+{% else %}
+<div class="card mb-5">
+    <div class="card-body p-4">
+        <div style="margin: auto">
+            <p class="mb-0 me-5">
+                <span>
+                    <strong style="font-size: 20px;font-weight: bold;margin: auto">
+                        No results found.
+                    </strong>
+                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal"><i class="fa fa-plus fa-lg"></i> Create Room
+                    </button>
+                </span>
+            </p>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Select User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'chat:room_create' %}" method="POST">
+                    {% csrf_token %}
+                    {% if form.errors %}
+                    {% for key, error in form.errors.items %}
+                    {{ error }}
+                    {% endfor %}
+                    {% endif %}
+                    {{ form.as_p }}
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">Close
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Create
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
